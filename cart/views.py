@@ -9,6 +9,9 @@ class CartViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class CartItemViewSet(viewsets.ModelViewSet):
@@ -17,3 +20,8 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user)
+    
+    def perform_create(self, serializer):
+        user = Cart.objects.get(user=self.request.user)
+
+        serializer.save(cart=user)

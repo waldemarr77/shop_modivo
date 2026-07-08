@@ -11,6 +11,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
     
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
 
 class OrderItemViewSet(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
@@ -18,4 +21,5 @@ class OrderItemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return OrderItem.objects.filter(order__user=self.request.user)
+    
 
