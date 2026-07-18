@@ -1,10 +1,22 @@
-from rest_framework.test import APITestCase
-from rest_framework import status
+import pytest
 from django.urls import reverse
 
-class ProductAPITest(APITestCase):
-    def test_get_product_list(self):
-        url = reverse('product-list')
-        response = self.client.get(url)
+@pytest.mark.django_db
+def test_product_list_returns_200(api_client):
+    url = reverse('product-list')
+    response = api_client.get(url)
+    assert response.status_code == 200
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+@pytest.mark.django_db
+def test_unauthenticated_user_cannot_create_product(api_client):
+    url = reverse('product-list')
+    response = api_client.post(url, {})
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_authenticated_user_can_view_products(authenticated_client):
+    url = reverse('product-list')
+    response = authenticated_client.get(url)
+    assert response.status_code == 200
