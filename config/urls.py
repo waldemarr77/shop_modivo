@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/orders/', include('orders.urls')),
     path('api/reviews/', include('reviews.urls')),
     path('api/users/', include('users.urls')),
+    path('api/assistant/', include('assistant.urls')),
 
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', lambda request: render(request, 'catalog.html'), name='catalog'),

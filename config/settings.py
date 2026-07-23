@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'reviews.apps.ReviewsConfig',
     'users.apps.UsersConfig',
+    'assistant.apps.AssistantConfig',
 ]
 
 
