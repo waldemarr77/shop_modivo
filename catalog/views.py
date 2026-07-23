@@ -4,35 +4,36 @@ from django_redis import get_redis_connection
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .models import MainCategory, SubCategory, Brand, Product
 from .serializers import MainCategorySerializer, SubCategorySerializer, BrandSerializer, ProductSerializer
+from .permissions import IsAdminOrReadOnly
 
 
 class MainCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MainCategorySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     queryset = MainCategory.objects.all()
 
 
 class SubCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = SubCategorySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     queryset = SubCategory.objects.all()
 
 
 class BrandViewSet(viewsets.ModelViewSet):
     serializer_class = BrandSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Brand.objects.all()
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Product.objects.select_related('brand', 'category').all()
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
