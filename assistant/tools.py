@@ -6,7 +6,7 @@ from orders.models import Order
 @tool
 def search_products_tool(query: str, max_price: float = None) -> str:
     """Шукає товари в базі даних магазину за назвою. Використовуй цей інструмент для пошуку кросівок, одягу тощо."""
-    products = Product.objects.filter(name__icontains=query)
+    products = Product.objects.select_related('brand').filter(name__icontains=query)
     
     if max_price:
         products = products.filter(price__lte=max_price)
