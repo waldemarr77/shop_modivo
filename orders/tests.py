@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import patch, MagicMock
 from django.urls import reverse
 from factories import CartItemFactory, CartFactory, ProductVariantFactory
 
@@ -25,7 +26,10 @@ def test_checkout_with_empty_cart_returns_400(authenticated_client):
 
 
 @pytest.mark.django_db
-def test_checkout_success(authenticated_client, user):
+@patch('orders.views.stripe.checkout.Session.create')
+@patch('orders.views.send_order_confirmation.delay')
+def test_checkout_success(mock_send_mail, mock_stripe, authenticated_client, user):
+    mock_stripe.return_value = MagicMock(url='http://fake.stripe.url')
     cart = CartFactory(user=user)
     variant = ProductVariantFactory(stock=10)
     CartItemFactory(cart=cart, variant=variant, quantity=2)

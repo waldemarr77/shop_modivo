@@ -36,8 +36,8 @@ def test_filter_products_by_brand(api_client):
     response = api_client.get(url, {'brand': nike.id})
 
     assert response.status_code == 200
-    assert len(response.data) == 1
-    assert response.data[0]['name'] == 'Air Max'
+    assert len(response.data['results']) == 1
+    assert response.data['results'][0]['name'] == 'Air Max'
 
 
 @pytest.mark.django_db
@@ -52,8 +52,8 @@ def test_search_products_by_name(api_client):
         response = api_client.get(url, {'search': 'Nike'})
 
     assert response.status_code == 200
-    assert len(response.data) == 1
-    assert 'Nike' in response.data[0]['name']
+    assert len(response.data['results']) == 1
+    assert 'Nike' in response.data['results'][0]['name']
 
 
 @pytest.mark.django_db
@@ -65,7 +65,7 @@ def test_ordering_products_by_price(api_client):
     response = api_client.get(url, {'ordering': 'price'})
 
     assert response.status_code == 200
-    prices = [p['price'] for p in response.data]
+    prices = [p['price'] for p in response.data['results']]
     assert prices == sorted(prices)
 
 

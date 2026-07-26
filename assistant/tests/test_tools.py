@@ -23,8 +23,8 @@ def test_search_products_tool_not_found():
 @pytest.mark.django_db
 def test_search_products_tool_with_price():
     brand = BrandFactory(name="Adidas")
-    ProductFactory(name="Футболка Adidas", price=5000, brand=brand)
-    ProductFactory(name="Футболка Adidas", price=2000, brand=brand)
+    ProductFactory(name="Футболка Adidas 1", price=5000, brand=brand)
+    ProductFactory(name="Футболка Adidas 2", price=2000, brand=brand)
     
     result = search_products_tool.invoke({"query": "Футболка", "max_price": 3000})
     
