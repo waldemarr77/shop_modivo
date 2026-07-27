@@ -13,7 +13,8 @@ class ChatMessage(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='chat_messages'
+        related_name='chat_messages',
+        verbose_name='Користувач'
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     content = models.TextField()
