@@ -12,7 +12,7 @@ jobs:
     
     services:
       postgres:
-        image: postgres:latest
+        image: ankane/pgvector:v0.5.1
         env:
           POSTGRES_DB: shop_modivo_db
           POSTGRES_USER: modivo_user
@@ -58,4 +58,5 @@ jobs:
         DB_USER: "modivo_user"
         DB_PASSWORD: "supersecret"
       run: |
+        PGPASSWORD=supersecret psql -h localhost -U modivo_user -d shop_modivo_db -c "CREATE EXTENSION IF NOT EXISTS vector;"
         pytest
