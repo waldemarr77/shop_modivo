@@ -1,4 +1,5 @@
 from django.db import models
+from pgvector.django import VectorField
 
 class MainCategory(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Назва категорії')
@@ -67,6 +68,10 @@ class Product(models.Model):
 
     image = models.ImageField(upload_to='product/', null=True, blank=True, verbose_name='Фото товару')
     created_at = models.DateTimeField(auto_now_add=True)
+    embedding = VectorField(dimensions=384, null=True, blank=True)
+
+    def get_semantic_text(self):
+        return f"Бренд: {self.brand.name}. Назва: {self.name}. Опис: {self.description}"
 
 
     class Meta:

@@ -3,19 +3,30 @@ from langchain.tools import tool
 from catalog.models import Product
 from orders.models import Order
 
+from langchain_huggingface import HuggingFaceEmbeddings
+from pgvector.django import CosineDistance
+
+embeddings_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+
 @tool
 def search_products_tool(query: str, max_price: float = None) -> str:
-    """Шукає товари в базі даних магазину за назвою. Використовуй цей інструмент для пошуку кросівок, одягу тощо."""
-    products = Product.objects.select_related('brand').filter(name__icontains=query)
+    """Шукає товари за змістом (семантично). Використовуй для будь-яких запитів про товари."""
+    query_vector = embeddings_model.embed_query(query)
+    
+    products = Product.objects.select_related('brand').order_by(
+        CosineDistance('embedding', query_vector)
+    )
     
     if max_price:
         products = products.filter(price__lte=max_price)
         
-    if not products.exists():
+    top_products = products[:5]
+        
+    if not top_products.exists():
         return f"На жаль, товарів за запитом '{query}' не знайдено."
         
-    result = "Ось що я знайшов:\n"
-    for p in products[:5]:
+    result = "Ось що я знайшов (найбільш відповідні):\n"
+    for p in top_products:
         result += f"- {p.name} (Бренд: {p.brand.name}), Ціна: {p.price} грн.\n"
         
     return result
